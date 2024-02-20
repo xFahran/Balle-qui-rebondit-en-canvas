@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Une balle qui rebondit</title>
+  <style>
+    #canv {
+        border: 1px solid black;
+    }
+    .input-group {
+        margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canv" width="400" height="400">
+    Désolé, votre navigateur ne prend pas en charge les canvas.
+  </canvas>
+  <div class="input-group">
+    <label for="vitesseHorizontale">Vitesse Horizontale:</label>
+    <input type="number" id="vitesseHorizontale" placeholder="Vitesse X (0)">
+  </div>
+  <div class="input-group">
+    <label for="vitesseVerticale">Vitesse Verticale:</label>
+    <input type="number" id="vitesseVerticale" placeholder="Vitesse Y (0)">
+  </div>
+  <p id="coords"></p>
+  <button onclick="goBalle()">Go Balle</button>
+  <script type="application/javascript" src="script.js" defer></script>
+</body>
+</html>
+
+
+
+
+
+
+
