@@ -2,8 +2,8 @@ const canv = document.getElementById("canv");
 const ctx = canv.getContext("2d");
 let xBalle, yBalle, vitesseX, vitesseY;
 let xBalle2, yBalle2, vitesseX2, vitesseY2;
-const diamBalle = 20, 
-rendBalle = 0.85;
+const diamBalle = 20,
+  rendBalle = 0.85;
 let animationInterval = null;
 let particles = [];
 
@@ -13,51 +13,49 @@ offscreenCanvas.height = canv.height;
 let offscreenCtx = offscreenCanvas.getContext('2d');
 
 
-document.getElementById('vitesseHorizontale').addEventListener('input', function(event) {
+document.getElementById('vitesseHorizontale').addEventListener('input', function (event) {
   vitesseX = parseFloat(event.target.value);
-  vitesseX2 = parseFloat(event.target.value); 
+  vitesseX2 = parseFloat(event.target.value);
 });
 
-document.getElementById('vitesseVerticale').addEventListener('input', function(event) {
+document.getElementById('vitesseVerticale').addEventListener('input', function (event) {
   vitesseY = parseFloat(event.target.value);
   vitesseY2 = parseFloat(event.target.value);
 });
 function Particle(x, y) {
   this.x = x;
   this.y = y;
-  this.vx = Math.random() * 2 - 1; // Vitesse X aléatoire
-  this.vy = Math.random() * 2 - 1; // Vitesse Y aléatoire
-  this.alpha = 3; // Opacité initiale
+  this.vx = Math.random() * 2 - 1; 
+  this.vy = Math.random() * 2 - 1; 
+  this.alpha = 3; 
 
-  // Mise à jour de la particule
-  this.update = function() {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.alpha -= 0.04; // Réduire l'opacité
+
+  this.update = function () {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha -= 0.04; 
   };
 }
 function triggerGlitterExplosion(x, y) {
-  let numberOfParticles = 20; // Nombre de particules à générer
+  let numberOfParticles = 20; 
   for (let i = 0; i < numberOfParticles; i++) {
-      particles.push(new Particle(x, y));
+    particles.push(new Particle(x, y));
   }
 }
 function animateParticles() {
   for (let i = 0; i < particles.length; i++) {
-      let p = particles[i];
-      p.update();
+    let p = particles[i];
+    p.update();
 
-      // Dessiner la particule
-      ctx.fillStyle = "rgba(255, 215, 0, " + p.alpha + ")"; // Couleur dorée avec alpha pour l'opacité
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2, false); // Dessiner un cercle
-      ctx.fill();
+    ctx.fillStyle = "rgba(255, 215, 0, " + p.alpha + ")"; 
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2, false); 
+    ctx.fill();
 
-      // Retirer les particules une fois qu'elles sont transparentes
-      if (p.alpha <= 0) {
-          particles.splice(i, 1);
-          i--;
-      }
+    if (p.alpha <= 0) {
+      particles.splice(i, 1);
+      i--;
+    }
   }
 }
 
@@ -73,7 +71,7 @@ function goBalle() {
   vitesseX2 = parseFloat(document.getElementById('vitesseHorizontale').value) || Math.random() * 10 - 5;
   vitesseY2 = parseFloat(document.getElementById('vitesseVerticale').value) || Math.random() * 10 - 5;
 
-  if(animationInterval === null) {
+  if (animationInterval === null) {
     animationInterval = window.setInterval(moveBalles, 20);
   }
 }
@@ -83,7 +81,7 @@ function moveBalles() {
   [xBalle2, yBalle2, vitesseX2, vitesseY2] = moveBalle(xBalle2, yBalle2, vitesseX2, vitesseY2);
   checkCollision();
   render();
-   animateParticles();
+  animateParticles();
 }
 
 function moveBalle(x, y, vx, vy) {
@@ -110,13 +108,10 @@ function checkCollision() {
   let distance = Math.sqrt(dx * dx + dy * dy);
 
   if (distance < diamBalle * 2) {
-    // Le vecteur de collision
     let nx = dx / distance;
     let ny = dy / distance;
-    // Quantité de mouvement (p) a trasnferer ( méthode maths)
-    let p = 2 * (vitesseX * nx + vitesseY * ny - vitesseX2 * nx - vitesseY2 * ny) / (1 + 1); // 1 +1 car on suppose que les 2 balles ont la meme masse
+    let p = 2 * (vitesseX * nx + vitesseY * ny - vitesseX2 * nx - vitesseY2 * ny) / (1 + 1); 
 
-    // Je change les vitesses en fonction de la masse a transferer
     vitesseX -= p * nx;
     vitesseY -= p * ny;
     vitesseX2 += p * nx;
@@ -128,22 +123,21 @@ function checkCollision() {
     xBalle2 += overlap * nx;
     yBalle2 += overlap * ny;
     triggerGlitterExplosion((xBalle + xBalle2) / 2, (yBalle + yBalle2) / 2);
-    }
+  }
 }
-  
 
 
-     let impulse = 2 * vitesseX / (1 + 1); // j'ai essayé de faire un système de collision réaliste qui ralentit la première et accelère la deuxième 
 
-    vitesseX -= impulse * collisionNormX;
-    vitesseY -= impulse * collisionNormY;
-    vitesseX2 += impulse * collisionNormX;
-    vitesseY2 += impulse * collisionNormY;
-  
+let impulse = 2 * vitesseX / (1 + 1); 
+vitesseX -= impulse * collisionNormX;
+vitesseY -= impulse * collisionNormY;
+vitesseX2 += impulse * collisionNormX;
+vitesseY2 += impulse * collisionNormY;
+
 
 function render() {
   offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-  
+
   offscreenCtx.fillStyle = "blue";
   offscreenCtx.beginPath();
   offscreenCtx.arc(xBalle, yBalle, diamBalle, 0, Math.PI * 2);
